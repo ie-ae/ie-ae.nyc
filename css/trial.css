@@ -1,0 +1,61 @@
+/* trial index, set out like 322a.site.
+   Type and spacing scale together: one size (--fs) grows with the window between a floor and a ceiling;
+   the side margin and the gutter are 1em of it, the top margin .75em, a line 1.25em.
+   Text sits on a 12-column grid across the window, so every piece keeps its column at any width:
+   Info col 7 (the centre line); in a row: number col 2, name col 4, place col 9,
+   year col 11, image count col 12. On a phone: number col 1, name col 5, year at the right edge.
+   Images: all the SAME WIDTH (three quarters of the window height, 322A's upright frame), centred, never
+   cropped, stitched into one strip down the page. The page snaps from image to image and the move
+   between them is the scroll itself (animated). Ground = purple-grey #605863.
+   The text is drawn twice (same rows, same places): outside the image column plainly, white on the purple;
+   inside the image column in "difference", so it turns dark on a light image and light on a dark one.
+   Each copy is clipped to its side of the column edges (--cl / --cr, set by trial.js). On a phone the
+   images are nearly as wide as the window, so there the list sits on a purple band and the strip passes
+   under it. */
+body.t3 { background: #605863; color: #fff; --fs: clamp(0.72rem, 0.84vw, 0.95rem); font-size: var(--fs); line-height: 1.25; letter-spacing: 0.025em; }
+.t3 .ov { position: fixed; left: 0; right: 0; top: 0; height: 14em; z-index: 3; pointer-events: none; color: #fff; }
+.t3 .ov .th, .t3 .ov .tl { position: absolute; left: 0; right: 0; padding: 0 1em; pointer-events: auto; }
+.t3 .ov.a { --grey: rgba(255, 255, 255, 0.42); }
+.t3 .ov.b { --grey: #555; mix-blend-mode: difference; display: none; }
+/* --ct = top of the first image while it is still below the top of the window (the logo page): above it
+   there is only purple, so the plain copy shows there */
+html.t3h .t3 .ov.b { display: block; clip-path: inset(var(--ct, 100%) calc(100% - var(--cr, 100%)) 0 var(--cl, 0px)); }
+html.t3h .t3 .ov.a { clip-path: polygon(evenodd, 0 0, 100% 0, 100% 100%, 0 100%, 0 0, var(--cl, 0px) var(--ct, 100%), var(--cl, 0px) 100%, var(--cr, 100%) 100%, var(--cr, 100%) var(--ct, 100%), var(--cl, 0px) var(--ct, 100%)); }
+.t3 .band { display: none; }
+.t3 .th, .t3 .tr { display: grid; grid-template-columns: repeat(12, 1fr); column-gap: 1em; }
+.t3 .th { top: 0.75em; }
+/* first page: the logo alone, centred in the window (below the list on a phone), in its own colours.
+   It is the first stop of the strip; scrolling slides it up and the first image in. */
+.t3 .cv { box-sizing: border-box; height: 100vh; height: 100svh; padding-top: var(--top); display: flex; align-items: center; justify-content: center; }
+.t3 .cv img { display: block; height: 10em; width: auto; scroll-snap-align: center; scroll-snap-stop: always; }
+.t3 .th .nf { grid-column: 7 / 12; }
+.t3 .tl { top: 5.75em; }
+.t3 .tr { color: var(--grey); transition: color 0.25s; }
+.t3 .tr span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.t3 .tr .c { grid-column: 2 / 4; }
+.t3 .tr .n { grid-column: 4 / 9; }
+.t3 .tr .p { grid-column: 9 / 11; }
+.t3 .tr .y { grid-column: 11 / 12; }
+.t3 .tr .k { grid-column: 12 / 13; visibility: hidden; }
+.t3 .tr.on, .t3 .tr:hover, .t3 .tr.hv { color: #fff; text-decoration: none; }
+.t3 .tr.on .k { visibility: visible; }
+.t3 { --w: min(75svh, calc(100vw - 2em)); --top: var(--lt, 0px); }   /* --lt = bottom of the list on a phone, 0 on a desktop (set by trial.js on <html>) */
+/* the images are stitched: one strip down the page, edge to edge, no gaps. The strip stops with an image
+   in the middle of the window (snap), its neighbours showing above and below. The space above the first
+   and below the last image lets those two reach the middle as well (above the first = the logo page). */
+.t3 .tm { padding-bottom: calc((100vh - var(--top) - var(--w) / var(--ar1, 1)) / 2); padding-bottom: calc((100svh - var(--top) - var(--w) / var(--ar1, 1)) / 2); }
+.t3 .tm > img { display: block; margin: 0 auto; width: 75vh; width: var(--w); height: auto; scroll-snap-align: center; scroll-snap-stop: always; }
+html.t3h { scroll-snap-type: y mandatory; scroll-behavior: smooth; overscroll-behavior: none; scroll-padding-top: var(--lt, 0px); }
+@media (max-width: 700px) {
+  body.t3 { --fs: 0.72rem; }
+  .t3 .ov.b, html.t3h .t3 .ov.b { display: none; }
+  html.t3h .t3 .ov.a { clip-path: none; }
+  .t3 .band { display: block; position: fixed; left: 0; right: 0; top: 0; height: var(--lt, 9em); z-index: 2; background: #605863; }
+  .t3 .th .nf { grid-column: 5 / 12; }
+  .t3 .tl { top: 6.5em; }
+  .t3 .tr .c { grid-column: 1 / 5; }
+  .t3 .tr .n { grid-column: 5 / 11; }
+  .t3 .tr .y { grid-column: 11 / 13; text-align: right; }
+  .t3 .tr .p, .t3 .tr .k { display: none; }
+  .t3 { --w: calc(100vw - 2em); }
+}
