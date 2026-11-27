@@ -1,0 +1,102 @@
+/* ie-ae.nyc. set like the drawing sheets: white page, Menlo, hairlines, title strip. */
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; overscroll-behavior: none; }
+body { margin: 0; overscroll-behavior: none; background: #fff; color: #000;
+  font: 11px/1.45 Menlo, "SF Mono", ui-monospace, "DejaVu Sans Mono", Consolas, monospace;
+  text-transform: uppercase; letter-spacing: 0.02em; }
+a { color: inherit; text-decoration: none; }
+a:hover, a:focus { text-decoration: underline; }
+b, h1, h2 { font-weight: 700; }
+h1, h2 { font-size: inherit; margin: 0; }
+h1, .foot b { text-transform: none; }
+.wrap { max-width: 900px; margin: 0 auto; padding: 0 16px; }
+img { display: block; width: 100%; height: auto; }
+
+/* top: the mark only, no rule */
+.top { padding: 14px 0 18px; }
+.top .mark { width: 44px; }
+
+/* index. one band per project: the image inside a thin white frame. Every image is fitted to the same
+   width; a band takes the height of its first image. Going down, a band holds at the top until the next
+   slides over it, so the images overlap as they pass (as on mos.nyc). Going sideways, a band shows one
+   of that project's images at a time: the left half of the band goes back one, the right half goes on one, a
+   swipe does the same. Nothing on the index opens a project page. */
+.stack { margin: 0; padding-bottom: 3vw; }
+.leaf { display: block; position: -webkit-sticky; position: sticky; top: 0; background: #fff; line-height: 0; }
+.leaf .slides { gap: 0; align-items: flex-start; }
+.leaf figure { flex: 0 0 auto; margin: 0; padding: 3vw 0 0 3vw; scroll-snap-align: start; scroll-snap-stop: always; }
+.leaf figure:last-child { padding-right: 3vw; }
+.leaf .slides img { display: block; width: auto; height: auto; max-width: 90vw; max-height: 90vh; max-height: min(90svh, calc(90vw / var(--ar, 1.5))); }
+/* slides.js adds .deck: one image shows at a time, centred in the band; nothing shows behind it. */
+.leaf .slides.deck { position: relative; z-index: 2; }
+.leaf .slides.deck figure { flex: 0 0 100%; padding: 0; }
+.leaf .slides.deck figure:last-child { padding-right: 0; }
+/* the images do not ride inside the sideways scroller (that made them shake under a finger). They sit in
+   a layer under it that stays still; the scroller on top is empty and only takes the swipe. */
+.leaf .cards { position: absolute; left: 0; top: 0; right: 0; bottom: 0; overflow: hidden; z-index: 1; pointer-events: none; }
+.leaf .cards .card { position: absolute; left: 0; top: 0; transform-origin: 0 0; will-change: transform; -webkit-backface-visibility: hidden; backface-visibility: hidden; }
+.leaf .cards .card img { display: block; width: 100%; height: auto; max-width: none; max-height: none; }
+.leaf.intro, .leaf.end { height: 100vh; height: 100svh; }
+.leaf.intro { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; line-height: 1.5; text-transform: none; letter-spacing: 0; padding: 0 12vw; box-sizing: border-box; }
+.leaf.intro p { margin: 0 0 1.5em; max-width: 34ch; }
+.leaf.intro p:last-child { margin-bottom: 0; }
+.leaf.end { text-align: center; padding: 0; display: flex; align-items: center; justify-content: center; }
+.leaf.end img { width: 72px; max-width: none; }
+
+/* project block */
+.proj { margin: 0 0 64px; }
+.shot { margin: 0 0 16px; }
+.pair { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 0 0 16px; }
+.pair .shot { margin: 0; }
+
+/* info block = title strip */
+.strip { border-top: 1px solid #000; padding-top: 8px; display: grid; grid-template-columns: minmax(120px, 1fr) 2fr auto; gap: 6px 20px; }
+.strip .go { text-align: right; white-space: nowrap; }
+.strip .go a { border-bottom: 1px solid #000; }
+.strip .go a:hover { text-decoration: none; }
+.note { text-transform: none; letter-spacing: 0; max-width: 68ch; margin: 14px 0 0; }
+
+/* specs: label column + readable values */
+.spec { margin: 0; display: grid; grid-template-columns: 76px 1fr; gap: 5px 12px; }
+.spec dt { font-weight: 700; }
+.spec dd { margin: 0; text-transform: none; letter-spacing: 0; }
+
+/* slide shows, one per group */
+.show { margin: 0 0 8px; }
+.view { margin: 34px 0 10px; display: flex; align-items: baseline; gap: 1.5em; }
+.show:first-child .view { margin-top: 0; }
+.view .ctl { margin-left: auto; display: none; }
+.show.js .ctl { display: block; }
+.view button, .zoom button { font: inherit; color: inherit; background: none; border: 0; padding: 0 0 0 14px; cursor: pointer; text-transform: uppercase; letter-spacing: inherit; }
+.view button:hover, .zoom button:hover { text-decoration: underline; }
+.slides { display: flex; gap: 16px; overflow-x: auto; scroll-snap-type: x mandatory; overscroll-behavior-x: none; scrollbar-width: none; align-items: flex-start; }
+.slides::-webkit-scrollbar { display: none; }
+.slides figure { flex: 0 0 100%; margin: 0; scroll-snap-align: start; scroll-snap-stop: always; }
+.slides img, .slides video { width: auto; max-width: 100%; max-height: 84vh; }
+.slides video { display: block; height: auto; background: #fff; }
+figcaption { margin-top: 6px; }
+
+/* enlarged view: Escape or Close leaves it */
+.zoom { position: fixed; top: 0; right: 0; bottom: 0; left: 0; z-index: 10; background: #fff; overflow: auto; padding: 0 16px 24px; }
+.zoom[hidden] { display: none; }
+.zoom .bar { position: sticky; top: 0; background: #fff; display: flex; gap: 20px; padding: 12px 0 8px; border-bottom: 1px solid #000; margin-bottom: 12px; }
+.zoom .bar .x { margin-left: auto; }
+.zoom img { margin: 0 auto; width: auto; max-width: 100%; height: auto; }
+
+/* bottom strip */
+.foot { border-top: 1px solid #000; margin-top: 64px; padding: 8px 0 28px; display: flex; gap: 24px; }
+.foot .r { margin-left: auto; text-align: right; }
+.mail { text-transform: none; letter-spacing: 0; border-bottom: 1px solid #000; }
+.mail:hover { text-decoration: none; }
+
+@media (max-width: 600px) {
+  .wrap { padding: 0 12px; }
+  .foot { flex-wrap: wrap; gap: 6px 20px; }
+  .proj { margin-bottom: 48px; }
+  .shot, .pair { margin-bottom: 10px; }
+  .pair { gap: 8px; }
+  .strip { grid-template-columns: 1fr 1.5fr; }
+  .strip .go { grid-column: 1 / -1; text-align: left; padding-top: 4px; }
+  .strip .spec { grid-column: 1 / -1; margin-top: 8px; }
+  .view { margin-top: 28px; }
+  .slides img, .slides video { width: 100%; max-height: none; }
+}
